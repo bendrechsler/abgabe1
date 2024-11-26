@@ -1,0 +1,130 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\title{Abgabe 1 für Computergestützte Methoden}
+\author{Gruppe 3: \\ Ben Drechsler \\ Mert Yilmaz \\ Edda Wächter}
+\date{Abgabedatum: \today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Der zentrale Grenzwertsatz}
+Der zentrale Grenzwertsatz (ZGS) ist ein fundamentales Resultat der Wahrscheinlichkeitstheorie, das die Verteilung von Summen unabhängiger, identisch verteilter (i.i.d.) Zufallsvariablen (ZV) beschreibt. Er besagt, dass unter bestimmten Voraussetzungen die Summe einer großen Anzahl solcher ZV annähernd normalverteilt ist, unabhängig von der Verteilung der einzelnen ZV. Dies ist besonders nützlich, da die Normalverteilung gut untersucht und mathematisch handhabbar ist.
+
+\subsection{Aussage}
+Sei \(X_1, X_2, \dots, X_n\) eine Folge von i.i.d. ZV mit dem Erwartungswert \(\mu = E(X_i)\) und der Varianz \(\sigma^2 = \text{Var}(X_i)\), wobei \(0 < \sigma^2 < \infty\) gelte. Dann konvergiert die standardisierte Summe \(Z_n\) dieser ZV für \(n \to \infty\) in Verteilung gegen eine Standardnormalverteilung:
+\[
+Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sigma \sqrt{n}} \overset{d}{\to} N(0, 1).
+\]
+Das bedeutet, dass für große \(n\) die Summe der ZV näherungsweise normalverteilt ist mit Erwartungswert \(n\mu\) und Varianz \(n\sigma^2\):
+\[
+\sum_{i=1}^n X_i \sim N(n\mu, n\sigma^2).
+\]
+
+\subsection{Erklärung der Standardisierung}
+Um die Summe der ZV in eine Standardnormalverteilung zu transformieren, subtrahiert man den Erwartungswert \(n\mu\) und teilt durch die Standardabweichung \(\sigma \sqrt{n}\). Dies führt zu der obigen Formel.(\footnote{(1)Der zentrale Grenzwertsatz hat verschiedene Verallgemeinerungen. Eine davon ist der Lindeberg-Feller-Zentrale-Grenzwertsatz [1, Seite 328], der schwächere Bedingungen an die Unabhängigkeit und die identische Verteilung der ZV stellt.})
+Die Darstellung ist für \(n \to \infty\) nicht wohldefiniert.
+
+\subsection{Anwendungen}
+Der ZGS wird in vielen Bereichen der Statistik und der Wahrscheinlichkeitstheorie angewendet. Typische Beispiele sind:
+\begin{itemize}
+    \item Schätzung von Mittelwerten aus Stichproben: Der ZGS erlaubt die Approximation der Verteilung des Stichprobenmittelwerts durch eine Normalverteilung.
+    \item Hypothesentests: Die Normalverteilung wird verwendet, um Teststatistiken wie den \(t\)-Test oder den \(z\)-Test zu approximieren.
+\end{itemize}
+
+\section{Bearbeitung zur Aufgabe 1}
+
+\subsection{Untersuchung des Datensatzes}
+Der bereitgestellte Datensatz enthält 12 Spalten und 36.439 Zeilen. Die relevanten Spalten für die Bearbeitung sind:
+\begin{itemize}
+    \item \textbf{group}: Gruppenzugehörigkeit.
+    \item \textbf{average\_temperature}: Durchschnittliche Temperatur.
+    \item \textbf{date}: Datum der Messung.
+    \item \textbf{station}: Name des Verleihes.
+\end{itemize}
+Es gibt fehlende Werte (\texttt{NaN}) in einigen Spalten, z. B. \texttt{average\_temperature}. Diese wurden bereinigt, um die Berechnungen korrekt durchzuführen.
+
+\subsection{Höchste mittlere Temperatur berechnen}
+
+Die Berechnung der höchsten mittleren Temperatur wurde mithilfe einer Tabellenkalkulation durchgeführt. Vorgehensweise:
+\begin{enumerate}
+    \item Import des Datensatzes in eine Tabellenkalkulation.
+    \item Entfernung aller Zeilen mit fehlenden Werten in der Spalte \texttt{average\_temperature}.
+    \item Nutzung der Funktion \texttt{MAX}, um die höchste mittlere Temperatur zu ermitteln.
+\end{enumerate}
+
+
+Die höchste mittlere Temperatur in den Daten der Gruppe 3 wurde mithilfe einer Tabellenkalkulation berechnet. Da die Temperaturangaben in Grad Fahrenheit vorliegen, wurde die höchste mittlere Temperatur von \(\mathbf{83^\circ \text{F}}\) in Grad Celsius umgerechnet:
+
+\[
+T_C = \frac{T_F - 32}{1.8} = \frac{83 - 32}{1.8} \approx 28.33^\circ \text{C}.
+\]
+
+Das Ergebnis lautet: \textbf{28,33°C}.
+
+\subsection{Datenbank-Schema}
+\subsubsection*{Entwurf (1. und 2. Normalform)}
+Das Datenbankschema wurde basierend auf den bereitgestellten Daten wie folgt entworfen:
+\begin{itemize}
+    \item Tabelle \texttt{weather\_data}:
+    \begin{itemize}
+        \item \texttt{id} (\texttt{INTEGER}, Primärschlüssel)
+        \item \texttt{group} (\texttt{INTEGER}, Gruppenzugehörigkeit)
+        \item \texttt{station} (\texttt{TEXT}, Name der Wetterstation)
+        \item \texttt{date} (\texttt{TEXT}, Datum im Format YYYY-MM-DD)
+        \item \texttt{average\_temperature} (\texttt{REAL}, mittlere Temperatur in Grad Celsius)
+    \end{itemize}
+\end{itemize}
+Dieses Schema erfüllt die:
+\begin{itemize}
+    \item \textbf{1. Normalform}, da alle Werte atomar sind.
+    \item \textbf{2. Normalform}, da es keine Teilabhängigkeiten innerhalb eines zusammengesetzten Primärschlüssels gibt.
+\end{itemize}
+
+\subsection{SQL-Statements zur Tabellenerstellung}
+Die folgende SQL-Definition wurde für die Tabelle verwendet:
+\begin{verbatim}
+CREATE TABLE weather_data (
+    id INTEGER PRIMARY KEY,
+    "group" INTEGER,
+    station TEXT,
+    date TEXT,
+    average_temperature REAL
+);
+\end{verbatim}
+
+\subsection{Import der Daten}
+Der Datensatz wurde vor dem Import in die Datenbank wie folgt vorbereitet:
+\begin{enumerate}
+    \item Entfernen aller Zeilen mit fehlenden Werten (\texttt{NaN}).
+    \item Speichern der bereinigten Daten als CSV-Datei mit den oben definierten Spalten.
+\end{enumerate}
+Der Import erfolgte mit folgendem SQL-Befehl:
+\begin{verbatim}
+.mode csv
+.import 'bereinigte_daten.csv' weather_data
+\end{verbatim}
+
+\subsection{SQL-Abfrage zur Ermittlung der höchsten mittleren Temperatur}
+Die höchste mittlere Temperatur wurde mit folgender SQL-Abfrage ermittelt:
+\begin{verbatim}
+SELECT MAX(average_temperature) AS max_temp
+FROM weather_data;
+\end{verbatim}
+\textbf{Ergebnis}: Die höchste mittlere Temperatur beträgt \textbf{28,33°C}.
+
+
+
+\section{Literatur}
+\begin{itemize}
+    \item [1] Achim Klenke. Wahrscheinlichkeitstheorie. Springer, 3. Edition, 2013.
+\end{itemize}
+
+\end{document}
